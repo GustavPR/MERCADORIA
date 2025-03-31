@@ -9,34 +9,53 @@
         <ToolbarItem Text="Adicionar" Clicked="ToolbarItem_Clicked"/>
     </ContentPage.ToolbarItems>
 
-    <VerticalStackLayout>
-        <SearchBar x:Name="txt_search" Placeholder="Busca de Produtos" TextChanged="txt_search_TextChanged"/>
-        <ListView x:Name="lst_produtos" ItemSelected="lst_produtos_SelectedItem">
-            <ListView.Header>
-                <Grid ColumnDefinitions="*, *, *, *, *">
-                    <Label Grid.Column="0" Text="Id"/>
-                    <Label Grid.Column="1" Text="Descricao"/>
-                    <Label Grid.Column="2" Text="Preco"/>
-                    <Label Grid.Column="3" Text="Quantidade"/>
-                    <Label Grid.Column="4" Text="Total"/>
-                </Grid>
-            </ListView.Header>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell>
-                        <ViewCell.ContextActions>
-                            <MenuItem Text="Remover" Clicked="MenuItem_Clicked" IsDestructive="True"/>
-                        </ViewCell.ContextActions>
-                        <Grid ColumnDefinitions="*, *, *, *, *">
-                            <Label Grid.Column="0" Text="{Binding Id}"/>
-                            <Label Grid.Column="1" Text="{Binding Descricao}"/>
-                            <Label Grid.Column="2" Text="{Binding Preco, StringFormat='{0:C}'}"/>
-                            <Label Grid.Column="3" Text="{Binding Quantidade}"/>
-                            <Label Grid.Column="4" Text="{Binding Total, StringFormat='{0:C}'}"/>
-                        </Grid>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </VerticalStackLayout>
+    <StackLayout Padding="10">
+        <!-- Picker para selecionar categoria -->
+        <Label Text="Filtrar por Categoria" FontSize="18" Padding="5"/>
+        <Picker x:Name="categoriaPicker" SelectedIndexChanged="CategoriaPicker_SelectedIndexChanged">
+            <Picker.Items>
+                 <x:String>Todos os Produtos</x:String>
+                <x:String>Alimentos</x:String>
+                <x:String>Higiene</x:String>
+                <x:String>Limpeza</x:String>
+                <!-- Adicione mais categorias conforme necessário -->
+            </Picker.Items>
+        </Picker>
+
+        <SearchBar x:Name="txt_search" Margin="-15, 0, 0, 0" Placeholder="Busca de Produtos" TextChanged="txt_search_TextChanged"/>
+
+        <Frame Padding="0" Margin="10" VerticalOptions="FillAndExpand">
+            <ListView x:Name="lst_produtos" IsPullToRefreshEnabled="True" Refreshing="lst_produtos_Refreshing" ItemSelected="lst_produtos_SelectedItem">
+                <ListView.Header>
+                    <Grid ColumnDefinitions="30, 100, 80, 50, 90" BackgroundColor="{StaticResource Gray100}">
+                        <Label Grid.Column="0" Text="Id" Padding="5" FontAttributes="Bold"/>
+                        <Label Grid.Column="1" Text="Descricao" FontAttributes="Bold"/>
+                        <Label Grid.Column="2" Text="Preco" FontAttributes="Bold"/>
+                        <Label Grid.Column="3" Text="Quantidade" FontAttributes="Bold"/>
+                        <Label Grid.Column="4" Text="Total" FontAttributes="Bold"/>
+                    </Grid>
+                </ListView.Header>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Remover" Clicked="MenuItem_Clicked" IsDestructive="True"/>
+                            </ViewCell.ContextActions>
+                            <Grid ColumnDefinitions="30, 100, 80, 50, 90">
+                                <Label Grid.Column="0" Text="{Binding Id}" Padding="5"/>
+                                <Label Grid.Column="1" Text="{Binding Descricao}"/>
+                                <Label Grid.Column="2" Text="{Binding Preco, StringFormat='{}{0:C}'}"/>
+                                <Label Grid.Column="3" Text="{Binding Quantidade}"/>
+                                <Label Grid.Column="4" Text="{Binding Total, StringFormat='{}{0:C}'}"/>
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Frame>
+
+        <!-- Exibir o total gasto por categoria -->
+        <Label x:Name="totalGastoLabel" FontSize="18" Padding="10"/>
+    </StackLayout>
 </ContentPage>

@@ -2,7 +2,7 @@ using MauiApp1.Models;
 using System;
 using System.Threading.Tasks;
 using Microsoft.Maui.Controls;
-//aaaaaagit log
+
 namespace MauiApp1.Views
 {
     public partial class NovoProduto : ContentPage
@@ -14,7 +14,6 @@ namespace MauiApp1.Views
         }
 
         // Manipulador do evento Clicked do ToolbarItem
-        // Esse é um método não assíncrono
         private async void ToolbarItem_Clicked(object sender, EventArgs e)
         {
             await ToolbarItem_ClickedAsync(sender, e); // Chama o método assíncrono
@@ -28,9 +27,10 @@ namespace MauiApp1.Views
                 // Validação para garantir que os campos não estão vazios
                 if (string.IsNullOrEmpty(txt_descricao.Text) ||
                     string.IsNullOrEmpty(txt_quantidade.Text) ||
-                    string.IsNullOrEmpty(txt_preco.Text))
+                    string.IsNullOrEmpty(txt_preco.Text) ||
+                    categoriaPicker.SelectedItem == null)
                 {
-                    await DisplayAlert("Erro", "Todos os campos são obrigatórios.", "OK");
+                    await DisplayAlert("Erro", "Todos os campos são obrigatórios, incluindo a categoria.", "OK");
                     return;
                 }
 
@@ -42,12 +42,16 @@ namespace MauiApp1.Views
                     return;
                 }
 
+                // Captura a categoria selecionada
+                string categoria = categoriaPicker.SelectedItem.ToString();
+
                 // Criação do objeto Produto
                 Produto p = new Produto
                 {
                     Descricao = txt_descricao.Text,
                     Quantidade = quantidade,
-                    Preco = preco
+                    Preco = preco,
+                    Categoria = categoria // Atribuindo a categoria ao produto
                 };
 
                 // Inserir o produto no banco de dados de forma assíncrona
@@ -55,14 +59,20 @@ namespace MauiApp1.Views
 
                 // Exibe um alerta de sucesso
                 await DisplayAlert("Sucesso!", "Produto inserido com sucesso.", "OK");
+
+                // Navega de volta para a página anterior
+                await Navigation.PopAsync();
+
+                // Atualizar a lista na página ListaProduto
+                // Encontrar a página ListaProduto na pilha de navegação e chamar o método para atualizar a lista
+                var listaProdutoPage = Navigation.NavigationStack.OfType<ListaProduto>().FirstOrDefault();
+                listaProdutoPage?.AtualizarListaProdutos(); // Chama o método para atualizar a lista na página ListaProduto
             }
             catch (Exception ex)
             {
                 // Em caso de erro, exibe a mensagem de erro
-                await DisplayAlert("Ops",ex.Message, "OK");
+                await DisplayAlert("Ops", ex.Message, "OK");
             }
         }
     }
 }
-
-

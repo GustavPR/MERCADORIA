@@ -1,5 +1,5 @@
 ﻿using MauiApp1.Helpers; // Certifique-se de que o namespace está correto
-
+using System.Globalization;
 namespace MauiApp1;
 
 public partial class App : Application
@@ -28,6 +28,8 @@ public partial class App : Application
     public App()
     {
         InitializeComponent();
+
+        Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("pt-BR");
 
         // Define a MainPage como uma NavigationPage com ListaProduto como página inicial
         MainPage = new NavigationPage(new Views.ListaProduto());
